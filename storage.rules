@@ -1,0 +1,31 @@
+rules_version = '2';
+
+// CATATAN: Ganti "ADMIN_EMAIL_DISINI" dengan email akun admin yang sama seperti di firestore.rules
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == "ADMIN_EMAIL_DISINI";
+    }
+
+    // Berkas pendaftar PPDB (pas foto, KK, akta lahir, sertifikat):
+    // siapa saja boleh mengunggah saat mendaftar, tapi tidak bisa menimpa berkas peserta lain
+    // karena path-nya menyertakan nomor pendaftaran unik. Hanya admin yang boleh menghapus.
+    match /pendaftar/{nomorPendaftaran}/{fileName} {
+      allow read: if true;
+      allow create: if request.resource.size < 5 * 1024 * 1024;
+      allow update, delete: if isAdmin();
+    }
+
+    // Foto ekstrakurikuler & galeri: publik boleh melihat, hanya admin boleh mengunggah/menghapus
+    match /ekstrakurikuler/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /galeri/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

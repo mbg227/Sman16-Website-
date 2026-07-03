@@ -1,0 +1,63 @@
+rules_version = '2';
+
+// CATATAN: Ganti "ADMIN_UID_DISINI" dengan UID akun admin dari Firebase Authentication
+// (Authentication > Users > salin User UID), atau gunakan custom claim "admin" jika sudah disiapkan.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == "ADMIN_EMAIL_DISINI";
+    }
+
+    // Koleksi konten publik: siapapun boleh membaca, hanya admin boleh menulis
+    match /informasi/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /ekstrakurikuler/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /osis_pengurus/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /osis_program/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /osis_galeri/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /pengaturan/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Pendaftar PPDB.
+    // - "get" (baca 1 dokumen dengan ID yang sudah diketahui, misal dari QR/nomor pendaftaran) dibuka untuk publik,
+    //   supaya peserta bisa cek status login mereka sendiri.
+    // - "list" (menampilkan SELURUH data pendaftar) hanya untuk admin, supaya data pribadi peserta lain tidak bisa dibaca massal.
+    match /pendaftar/{docId} {
+      allow create: if true;
+      allow get: if true;
+      allow list: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    // Index kecil: email -> nomor pendaftaran, supaya peserta bisa login pakai email
+    // tanpa perlu izin "list" ke seluruh koleksi pendaftar (yang berisi data pribadi).
+    match /email_index/{email} {
+      allow create: if true;
+      allow get: if true;
+      allow list: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+  }
+}

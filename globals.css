@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-krem text-tinta font-body antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-coklat-muda/40 text-tinta;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #8a5a34;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .block-corner {
+    position: relative;
+  }
+  .block-corner::before,
+  .block-corner::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #8a5a34;
+    opacity: 0.6;
+  }
+  .block-corner::before {
+    top: -4px;
+    left: -4px;
+    border-right: none;
+    border-bottom: none;
+  }
+  .block-corner::after {
+    bottom: -4px;
+    right: -4px;
+    border-left: none;
+    border-top: none;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-coklat-tua text-krem-light px-6 py-3 font-display font-semibold tracking-wide shadow-block transition-all hover:-translate-y-0.5 hover:shadow-block-lg active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 bg-transparent border-2 border-coklat-tua text-coklat-tua px-6 py-3 font-display font-semibold tracking-wide transition-all hover:bg-coklat-tua hover:text-krem-light disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .input-field {
+    @apply w-full bg-white border border-coklat-muda/50 px-4 py-2.5 text-tinta placeholder:text-tinta/40 focus:border-coklat-tua outline-none transition-colors;
+  }
+
+  .label-field {
+    @apply block text-sm font-medium text-coklat-tua mb-1.5;
+  }
+
+  .card-surface {
+    @apply bg-white border border-coklat-muda/30 shadow-block;
+  }
+}
+
+.dark body {
+  @apply bg-[#1B140D] text-krem-light;
+}
+.dark .card-surface {
+  @apply bg-[#241a10] border-coklat-muda/20;
+}
+.dark .input-field {
+  @apply bg-[#241a10] text-krem-light border-coklat-muda/30;
+}
